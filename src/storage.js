@@ -1,7 +1,7 @@
 // storage.js
 
 // ご自身のGASウェブアプリURLに差し替えてください
-const API_URL = "https://script.google.com/macros/s/AKfycbzcbRZV6arjxke-bHhf240f67OnHRf6GH1V8XIasqsGR7g4FiLMLonSh1TlacSmXZMB/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxka4WiNcYmRKGB5n83_C5-yvn4O4beZtmoKVLjpx7ljcKHytfG1HMIoUxPJLWdksJh/exec";
 
 // スプレッドシート全データ取得（GET）
 export async function fetchSheetData() {
