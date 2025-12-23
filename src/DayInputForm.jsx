@@ -4,7 +4,7 @@ import { loadDayData, saveDayData, resetDayData } from "./storage";
 const IDS = ["101", "111", "102", "112", "103", "113", "104", "114", "106"];
 const FIELDS = [
   { key: "net", label: "純売(税抜)" },
-  { key: "gross", label: "純売上(税込)" },
+  { key: "gross", label: "総売上(税込)" },
   { key: "tax", label: "税合計" },
   { key: "customers", label: "客数" },
   { key: "payment", label: "納金額" },
