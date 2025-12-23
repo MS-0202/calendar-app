@@ -1,13 +1,44 @@
 // storage.js
-const API_URL = "https://script.google.com/macros/s/AKfycbydctB1bjFUWQ4XsqyRCmNhAC1VLjqINieAzZRKq8BCeK9KJT-vD25Skb6TIp_DZsO8/exec";
 
-// 日付ごとのデータを取得
+// ご自身のGASウェブアプリURLに差し替えてください
+const API_URL = "https://script.google.com/macros/s/AKfycbyMTNDqIENOTuIhVzBCeQIPeYIhNANl6tu3VJe4heiXwQVVkGDaCCnTT4rld5JQIrsS/exec";
+
+// スプレッドシート全データ取得（GET）
+export async function fetchSheetData() {
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error("データ取得に失敗しました");
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("GETエラー:", err);
+    throw err;
+  }
+}
+
+// 1行データ保存（POST）
+export async function postSheetData(rowObj) {
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(rowObj),
+    });
+    if (!res.ok) throw new Error("データ保存に失敗しました");
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.error("POSTエラー:", err);
+    throw err;
+  }
+}
+
+// 日付ごとのデータ取得（DayInputForm用）
 export async function loadDayData(date) {
-  const res = await fetch(API_URL);
-  const all = await res.json();
-  // GASから返るのは配列なので、日付でフィルタ
+  const all = await fetchSheetData();
+  // 指定日のデータのみ抽出
   const filtered = all.filter(row => row.date === date);
-  // { [id]: { net, gross, ... } } の形に変換
+  // idごとにまとめる
   const result = {};
   filtered.forEach(row => {
     result[row.id] = {
@@ -21,25 +52,18 @@ export async function loadDayData(date) {
   return result;
 }
 
-// 日付ごとのデータを保存
+// 日付ごとのデータ保存（DayInputForm用）
 export async function saveDayData(date, data) {
   // data: { [id]: { net, gross, ... } }
-  // idごとに1行ずつ送信
-  for (const id of Object.keys(data)) {
-    await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        date,
-        id,
-        ...data[id],
-      }),
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+  // idごとにPOST
+  const promises = Object.entries(data).map(([id, fields]) =>
+    postSheetData({ date, id, ...fields })
+  );
+  await Promise.all(promises);
 }
 
-// 日付ごとのデータをリセット（全削除）
-// GAS側にdelete機能がなければ、スプレッドシートから手動削除 or 上書き保存で対応
+// リセット（GAS側で削除APIを作っていない場合はダミー関数でOK）
 export async function resetDayData(date) {
-  alert("リセットはスプレッドシートから手動で行ってください（GASのdelete機能は省略）");
+  // スプレッドシート連携の場合、手動削除が必要なため空実装
+  return;
 }

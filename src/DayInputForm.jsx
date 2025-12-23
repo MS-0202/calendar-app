@@ -16,10 +16,15 @@ export default function DayInputForm({ date, onBack }) {
 
   useEffect(() => {
     setLoading(true);
-    loadDayData(date).then((d) => {
-      setData(d || {});
-      setLoading(false);
-    });
+    loadDayData(date)
+      .then((d) => {
+        setData(d || {});
+        setLoading(false);
+      })
+      .catch((err) => {
+        alert("データ取得エラー: " + err.message);
+        setLoading(false);
+      });
   }, [date]);
 
   function handleChange(id, field, value) {
@@ -34,21 +39,28 @@ export default function DayInputForm({ date, onBack }) {
     return IDS.reduce((sum, id) => sum + Number(data[id]?.[field] || 0), 0);
   }
 
-  // 保存後すぐカレンダーに戻す
   async function handleSave() {
     setLoading(true);
-    onBack(); // 先に画面を戻す
-    await saveDayData(date, data);
+    try {
+      await saveDayData(date, data);
+      alert("保存しました");
+      onBack();
+    } catch (err) {
+      alert("保存失敗: " + err.message);
+    }
     setLoading(false);
-    alert("保存しました");
   }
 
   async function handleReset() {
     setLoading(true);
-    await resetDayData(date);
-    setData({});
+    try {
+      await resetDayData(date);
+      setData({});
+      alert("リセットしました（スプレッドシート連携の場合は手動削除が必要な場合があります）");
+    } catch (err) {
+      alert("リセット失敗: " + err.message);
+    }
     setLoading(false);
-    alert("リセットしました（スプレッドシート連携の場合は手動削除が必要な場合があります）");
   }
 
   const totalRow = {};
