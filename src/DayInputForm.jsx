@@ -13,9 +13,7 @@ const FIELDS = [
 export default function DayInputForm({ date, onBack }) {
   const [data, setData] = useState({});
   useEffect(() => {
-    (async () => {
-      setData((await loadDayData(date)) || {});
-    })();
+    setData(loadDayData(date) || {});
   }, [date]);
 
   function handleChange(id, field, value) {
@@ -33,15 +31,15 @@ export default function DayInputForm({ date, onBack }) {
     );
   }
 
-  async function handleSave() {
-    await saveDayData(date, data);
+  function handleSave() {
+    saveDayData(date, data);
     alert("保存しました");
     onBack();
   }
 
-  async function handleReset() {
+  function handleReset() {
     if (window.confirm("この日の入力内容をリセットします。よろしいですか？")) {
-      await resetDayData(date);
+      resetDayData(date);
       setData({});
       alert("リセットしました");
     }
@@ -89,10 +87,25 @@ export default function DayInputForm({ date, onBack }) {
                 ))}
               </tr>
             ))}
-            <tr style={{ background: "#f0f0f0", fontWeight: "bold" }}>
-              <td>合計</td>
+            <tr
+              style={{
+                background: "#ffe082",
+                fontWeight: "bold",
+                fontSize: "1.2rem"
+              }}
+            >
+              <td style={{ textAlign: "center" }}>合計</td>
               {FIELDS.map((f) => (
-                <td key={f.key}>{totalRow[f.key]}</td>
+                <td
+                  key={f.key}
+                  style={{
+                    textAlign: "right",
+                    color: "#2e7d32",
+                    fontWeight: "bold"
+                  }}
+                >
+                  {totalRow[f.key].toLocaleString()}
+                </td>
               ))}
             </tr>
           </tbody>
