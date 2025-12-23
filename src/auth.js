@@ -1,22 +1,16 @@
 import app from "./firebase";
-import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
-
-// ...firebaseConfigとappはそのまま...
+import {
+  getAuth,
+  signInAnonymously,
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth";
 
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-// デバイスによってポップアップかリダイレクトかを自動判定
-function isMobile() {
-  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-}
 
 export function login() {
-  if (isMobile()) {
-    return signInWithRedirect(auth, provider);
-  } else {
-    return signInWithPopup(auth, provider);
-  }
+  // 匿名認証でログイン
+  return signInAnonymously(auth);
 }
 
 export function logout() {

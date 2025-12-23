@@ -9,7 +9,7 @@ export default function AuthStatus() {
     return () => unsubscribe();
   }, []);
 
-  // 未ログイン時は自動でGoogleログイン画面を出す
+  // 未ログイン時は自動で匿名ログイン
   useEffect(() => {
     if (user === null) {
       login();
@@ -22,7 +22,7 @@ export default function AuthStatus() {
   }
   return (
     <div>
-      {user.displayName}でログイン中
+      匿名ユーザーでログイン中
       <button onClick={logout}>ログアウト</button>
     </div>
   );
