@@ -9,8 +9,16 @@ export default function AuthStatus() {
     return () => unsubscribe();
   }, []);
 
+  // 未ログイン時は自動でGoogleログイン画面を出す
+  useEffect(() => {
+    if (user === null) {
+      login();
+    }
+  }, [user]);
+
   if (!user) {
-    return <button onClick={login}>Googleでログイン</button>;
+    // ログイン中は何も表示しない（または「ログイン中...」など）
+    return null;
   }
   return (
     <div>
