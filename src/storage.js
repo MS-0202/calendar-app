@@ -5,10 +5,13 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 // スプレッドシート全データ取得（GET）
 export async function fetchSheetData() {
+  console.log("API_URL:", API_URL); // fetch前にURL確認
   try {
     const res = await fetch(API_URL);
+    const text = await res.text(); // fetch直後にレスポンス内容確認
+    console.log("fetch結果:", text);
     if (!res.ok) throw new Error("データ取得に失敗しました");
-    const data = await res.json();
+    const data = JSON.parse(text); // ここでJSON変換
     return data;
   } catch (err) {
     console.error("GETエラー:", err);
