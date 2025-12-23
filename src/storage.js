@@ -1,7 +1,7 @@
 // storage.js
 
-// ご自身のGASウェブアプリURLに差し替えてください
-const API_URL = "https://script.google.com/macros/s/AKfycbxka4WiNcYmRKGB5n83_C5-yvn4O4beZtmoKVLjpx7ljcKHytfG1HMIoUxPJLWdksJh/exec";
+// 環境変数からAPI_URLを取得（ローカルも本番も対応）
+const API_URL = process.env.REACT_APP_API_URL;
 
 // スプレッドシート全データ取得（GET）
 export async function fetchSheetData() {
