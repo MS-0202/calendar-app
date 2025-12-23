@@ -13,7 +13,9 @@ const FIELDS = [
 export default function DayInputForm({ date, onBack }) {
   const [data, setData] = useState({});
   useEffect(() => {
-    setData(loadDayData(date) || {});
+    (async () => {
+      setData((await loadDayData(date)) || {});
+    })();
   }, [date]);
 
   function handleChange(id, field, value) {
@@ -31,16 +33,15 @@ export default function DayInputForm({ date, onBack }) {
     );
   }
 
-  function handleSave() {
-    saveDayData(date, data);
+  async function handleSave() {
+    await saveDayData(date, data);
     alert("保存しました");
     onBack();
   }
 
-  // リセット処理
-  function handleReset() {
+  async function handleReset() {
     if (window.confirm("この日の入力内容をリセットします。よろしいですか？")) {
-      resetDayData(date);
+      await resetDayData(date);
       setData({});
       alert("リセットしました");
     }
@@ -53,7 +54,6 @@ export default function DayInputForm({ date, onBack }) {
     <div>
       <button onClick={onBack}>← カレンダーに戻る</button>
       <h3>{date}</h3>
-      {/* リセットボタンを追加 */}
       <button
         onClick={handleReset}
         style={{ marginBottom: 8, background: "#f88", color: "#fff" }}

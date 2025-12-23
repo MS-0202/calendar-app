@@ -1,20 +1,18 @@
-// 日付ごとのデータをlocalStorageに保存・取得
-const KEY = "calendar-app-data";
+const API = "/api/data";
 
-export function loadDayData(date) {
-  const all = JSON.parse(localStorage.getItem(KEY) || "{}");
-  return all[date] || null;
+export async function loadDayData(date) {
+  const res = await fetch(`${API}?date=${date}`);
+  return await res.json();
 }
 
-export function saveDayData(date, data) {
-  const all = JSON.parse(localStorage.getItem(KEY) || "{}");
-  all[date] = data;
-  localStorage.setItem(KEY, JSON.stringify(all));
+export async function saveDayData(date, data) {
+  await fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date, data }),
+  });
 }
 
-// リセット機能を追加
-export function resetDayData(date) {
-  const all = JSON.parse(localStorage.getItem(KEY) || "{}");
-  delete all[date];
-  localStorage.setItem(KEY, JSON.stringify(all));
+export async function resetDayData(date) {
+  await fetch(`${API}?date=${date}`, { method: "DELETE" });
 }
