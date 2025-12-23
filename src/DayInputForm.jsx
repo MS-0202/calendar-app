@@ -34,12 +34,13 @@ export default function DayInputForm({ date, onBack }) {
     return IDS.reduce((sum, id) => sum + Number(data[id]?.[field] || 0), 0);
   }
 
+  // 保存後すぐカレンダーに戻す
   async function handleSave() {
     setLoading(true);
+    onBack(); // 先に画面を戻す
     await saveDayData(date, data);
     setLoading(false);
     alert("保存しました");
-    onBack();
   }
 
   async function handleReset() {
