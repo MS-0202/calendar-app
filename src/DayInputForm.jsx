@@ -13,7 +13,9 @@ const FIELDS = [
 export default function DayInputForm({ date, onBack }) {
   const [data, setData] = useState({});
   useEffect(() => {
-    setData(loadDayData(date) || {});
+    (async () => {
+      setData((await loadDayData(date)) || {});
+    })();
   }, [date]);
 
   function handleChange(id, field, value) {
@@ -31,15 +33,15 @@ export default function DayInputForm({ date, onBack }) {
     );
   }
 
-  function handleSave() {
-    saveDayData(date, data);
+  async function handleSave() {
+    await saveDayData(date, data);
     alert("保存しました");
     onBack();
   }
 
-  function handleReset() {
+  async function handleReset() {
     if (window.confirm("この日の入力内容をリセットします。よろしいですか？")) {
-      resetDayData(date);
+      await resetDayData(date);
       setData({});
       alert("リセットしました");
     }
